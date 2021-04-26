@@ -13,10 +13,7 @@ import {
   INDENT_SIZE,
   MainAPI
 } from 'src/renderer/app/constants/common.constants';
-import {
-  methods,
-  statusCodes
-} from 'src/renderer/app/constants/routes.constants';
+import { methods } from 'src/renderer/app/constants/routes.constants';
 import { Errors } from 'src/renderer/app/enums/errors.enum';
 import { RemoveLeadingSlash } from 'src/renderer/app/libs/utils.lib';
 import { SchemasBuilderService } from 'src/renderer/app/services/schemas-builder.service';
@@ -282,12 +279,11 @@ export class OpenAPIConverterService {
           const routeResponses: RouteResponse[] = [];
 
           Object.keys(parsedRoute.responses).forEach((responseStatus) => {
+            const statusCode = parseInt(responseStatus, 10);
             // filter unsupported status codes (i.e. ranges containing "X", 4XX, 5XX, etc)
             // consider 'default' as 200
             if (
-              statusCodes.find(
-                (statusCode) => statusCode.code === parseInt(responseStatus, 10)
-              ) ||
+              (statusCode >= 100 && statusCode <= 999) ||
               responseStatus === 'default'
             ) {
               const routeResponse: OpenAPIV2.ResponseObject &
@@ -332,10 +328,7 @@ export class OpenAPIConverterService {
                       )
                     )
                   : '',
-                statusCode:
-                  responseStatus === 'default'
-                    ? 200
-                    : parseInt(responseStatus, 10),
+                statusCode: responseStatus === 'default' ? 200 : statusCode,
                 label: routeResponse.description || '',
                 headers: this.buildResponseHeaders(
                   contentTypeHeaders,

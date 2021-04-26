@@ -722,17 +722,33 @@
                       class="custom-select col-4"
                       formControlName="statusCode"
                     >
-                      <option
-                        *ngFor="let statusCode of statusCodes"
-                        [ngValue]="statusCode.code"
-                        [selected]="
-                          activeRouteResponse.statusCode === statusCode.code
+                      <optgroup
+                        *ngFor="
+                          let statusCodeGroup of statusCodes;
+                          trackBy: statusCodesTrackBy
                         "
+                        [label]="statusCodeGroup.label"
+                        [ngClass]="{
+                          'disabled-color': statusCodeGroup.disabled
+                        }"
                       >
-                        {{ statusCode.code }}
-                        -
-                        {{ statusCode.text }}
-                      </option>
+                        <option
+                          *ngFor="
+                            let statusCode of statusCodeGroup.codes;
+                            trackBy: statusCodesTrackBy
+                          "
+                          [ngValue]="statusCode.value"
+                          [hidden]="statusCode.hidden"
+                          [selected]="
+                            activeRouteResponse.statusCode === statusCode.value
+                          "
+                        >
+                          {{ statusCode.value
+                          }}{{
+                            statusCode.label ? ' - ' + statusCode.label : ''
+                          }}
+                        </option>
+                      </optgroup>
                     </select>
                     <div class="input-group-prepend">
                       <span class="input-group-text"

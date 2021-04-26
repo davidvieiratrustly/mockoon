@@ -522,6 +522,21 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * Function for status codes ngFor trackby
+   *
+   * @param index
+   * @param item
+   * @returns
+   */
+  public statusCodesTrackBy(index: number, item: { id?: number; value?: any }) {
+    if (item.id !== undefined) {
+      return item.id;
+    } else {
+      return item.value;
+    }
+  }
+
+  /**
    * Init active environment and route forms, and subscribe to changes
    */
   private initForms() {
